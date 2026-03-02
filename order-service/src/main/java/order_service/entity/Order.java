@@ -21,19 +21,17 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItemList;
 
-    //TODO: status
+    @Enumerated(EnumType.STRING)
+    private Status status; public enum Status { CREATED, PENDING, PAID, FAILED }
 
     private Instant createdAt;
     private Instant updatedAt;
 
     //TODO: version
-
     //TODO: paymentId
-
     //TODO: failureReason
 
-    public Order() {
-    }
+    public Order() {}
 
     public Order(UUID orderId, String customerId, BigDecimal totalAmount, String currency, List<OrderItem> orderItemList, Instant createdAt, Instant updatedAt) {
         this.orderId = orderId;
@@ -41,6 +39,7 @@ public class Order {
         this.totalAmount = totalAmount;
         this.currency = currency;
         this.orderItemList = orderItemList;
+        this.status = Status.CREATED;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }

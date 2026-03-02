@@ -20,8 +20,7 @@ public class OrderItem {
     Integer quantity;
     BigDecimal price;
 
-    public OrderItem() {
-    }
+    public OrderItem() {}
 
     public OrderItem(UUID orderItemId, Order order, String productId, Integer quantity, BigDecimal price) {
         this.orderItemId = orderItemId;
