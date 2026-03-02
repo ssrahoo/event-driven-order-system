@@ -25,13 +25,20 @@ public class OrderService {
                 UUID.randomUUID(),
                 UUID.randomUUID(),
                 orderDto.customerId(),
-                orderDto.totalAmount(),
+                getTotalAmount(orderDto.items()),
                 orderDto.currency(),
                 mapItems(orderDto.items()),
                 Instant.now()
         );
 
         publisher.publishOrderCreated(orderEvent);
+    }
+
+    private BigDecimal getTotalAmount(List<OrderItemDto> items) {
+        BigDecimal total = items.stream()
+                .map(item -> item.price().multiply(BigDecimal.valueOf(item.quantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return total;
     }
 
     private static List<OrderItemEvent> mapItems(List<OrderItemDto> items) {
@@ -43,5 +50,7 @@ public class OrderService {
                 ))
                 .toList();
     }
+
+
 
 }
