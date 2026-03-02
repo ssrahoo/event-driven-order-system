@@ -1,4 +1,4 @@
-package order_service.dto;
+package order_service.event;
 
 import java.math.BigDecimal;
 

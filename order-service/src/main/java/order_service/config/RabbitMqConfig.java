@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
 
-    public static final String ORDER_CREATED_QUEUE = "order-created-queue";
+    public static final String ORDER_SERVICE_QUEUE = "order-service-queue";
 
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
@@ -18,8 +18,8 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public Declarable orderCreatedQueue(){
-        return new Queue(ORDER_CREATED_QUEUE);
+    public Declarable orderServiceQueue(){
+        return new Queue(ORDER_SERVICE_QUEUE);
     }
 
 }
