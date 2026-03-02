@@ -1,7 +1,7 @@
 package order_service.controller;
 
-import order_service.dto.OrderCreatedEvent;
-import order_service.publisher.OrderCreatedPublisher;
+import order_service.dto.OrderDto;
+import order_service.event.OrderEvent;
 import order_service.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +20,8 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderCreatedEvent order) {
-        orderService.createOrder(order);
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) {
+        orderService.createOrder(orderDto);
         return ResponseEntity.accepted().build();
     }
 }

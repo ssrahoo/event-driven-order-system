@@ -1,22 +1,22 @@
 package order_service.publisher;
 
 import order_service.config.RabbitMqConfig;
-import order_service.dto.OrderCreatedEvent;
+import order_service.event.OrderEvent;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderCreatedPublisher {
+public class OrderPublisher {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public OrderCreatedPublisher(RabbitTemplate rabbitTemplate) {
+    public OrderPublisher(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void publishOrderCreated(OrderCreatedEvent event) {
+    public void publishOrderCreated(OrderEvent event) {
         rabbitTemplate.convertAndSend(
-                RabbitMqConfig.ORDER_CREATED_QUEUE,
+                RabbitMqConfig.ORDER_SERVICE_QUEUE,
                 event
         );
     }
