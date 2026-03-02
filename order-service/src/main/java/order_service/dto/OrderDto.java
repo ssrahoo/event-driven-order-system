@@ -5,4 +5,4 @@ import order_service.event.OrderItemEvent;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record OrderDto(String customerId, BigDecimal totalAmount, String currency, List<OrderItemDto> items){}
+public record OrderDto(String customerId, String currency, List<OrderItemDto> items){}
