@@ -41,6 +41,7 @@ public class OrderService {
                 mapItems(orderDto.items()),
                 Instant.now()
         );
+
         publisher.publishOrderCreated(orderEvent);
 
         Order order = new Order(
@@ -61,6 +62,9 @@ public class OrderService {
         order.setOrderItemList(orderItemList); // this sets both sides
 
         orderRepository.save(order);
+
+        //TODO: add Transactional Outbox Pattern
+
     }
 
     private BigDecimal getTotalAmount(List<OrderItemDto> items) {
