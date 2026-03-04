@@ -1,17 +1,23 @@
 package order_service.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import order_service.dto.OrderDto;
 import order_service.dto.OrderItemDto;
 import order_service.entity.Order;
 import order_service.entity.OrderItem;
+import order_service.entity.OutboxEvent;
 import order_service.event.OrderEvent;
 import order_service.event.OrderItemEvent;
 import order_service.publisher.OrderPublisher;
 import order_service.repository.OrderRepository;
+import order_service.repository.OutboxRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,15 +25,18 @@ import java.util.UUID;
 @Service
 public class OrderService {
 
-    private final OrderPublisher publisher;
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final OutboxRepository outboxRepository;
+    private final ObjectMapper objectMapper;
 
-    public OrderService(OrderPublisher publisher, OrderRepository orderRepository) {
-        this.publisher = publisher;
+    public OrderService(OrderRepository orderRepository, OutboxRepository outboxRepository, ObjectMapper objectMapper) {
         this.orderRepository = orderRepository;
+        this.outboxRepository = outboxRepository;
+        this.objectMapper = objectMapper;
     }
 
-    public void createOrder(OrderDto orderDto) {
+    @Transactional
+    public void createOrder(OrderDto orderDto) throws JsonProcessingException {
         UUID orderId = UUID.randomUUID();
         UUID eventId = UUID.randomUUID();
         BigDecimal totalAmount = getTotalAmount(orderDto.items());
@@ -54,10 +63,18 @@ public class OrderService {
                 Instant.now()
         );
 
-        orderRepository.save(order);
-        publisher.publishOrderCreated(orderEvent);
+        // Transactional Outbox Pattern
+        OutboxEvent outboxEvent = new OutboxEvent(
+            UUID.randomUUID(),
+            "ORDER",
+            order.getOrderId().toString(),
+            "ORDER_CREATED",
+            objectMapper.writeValueAsString(orderEvent),
+            LocalDateTime.now()
+        );
 
-        //TODO: add Transactional Outbox Pattern
+        orderRepository.save(order);
+        outboxRepository.save(outboxEvent);
     }
 
     private BigDecimal getTotalAmount(List<OrderItemDto> items) {

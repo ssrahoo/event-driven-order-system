@@ -1,5 +1,6 @@
 package order_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import order_service.dto.OrderDto;
 import order_service.event.OrderEvent;
 import order_service.service.OrderService;
@@ -20,7 +21,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) throws JsonProcessingException {
         orderService.createOrder(orderDto);
         return ResponseEntity.accepted().build();
     }
