@@ -32,6 +32,8 @@ public class RabbitMqConfig {
                 //.with("order.*");
     }
 
+    //TODO: move binding and queue to payment-service
+
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
