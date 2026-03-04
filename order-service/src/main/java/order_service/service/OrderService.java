@@ -32,18 +32,6 @@ public class OrderService {
         UUID eventId = UUID.randomUUID();
         BigDecimal totalAmount = getTotalAmount(orderDto.items());
 
-        OrderEvent orderEvent = new OrderEvent(
-                orderId,
-                eventId,
-                orderDto.customerId(),
-                totalAmount,
-                orderDto.currency(),
-                mapItems(orderDto.items()),
-                Instant.now()
-        );
-
-        publisher.publishOrderCreated(orderEvent);
-
         Order order = new Order(
                 orderId,
                 orderDto.customerId(),
@@ -54,17 +42,22 @@ public class OrderService {
                 null
         );
 
-        List<OrderItem> orderItemList = new ArrayList<>();
-        for (OrderItemDto dto : orderDto.items()) {
-            OrderItem item = new OrderItem(UUID.randomUUID(), order, dto.productId(), dto.quantity(), dto.price());
-            orderItemList.add(item);
-        }
-        order.setOrderItemList(orderItemList); // this sets both sides
+        mapAndSetItems(orderDto.items(), order);
+
+        OrderEvent orderEvent = new OrderEvent(
+                orderId,
+                eventId,
+                orderDto.customerId(),
+                totalAmount,
+                orderDto.currency(),
+                mapItems(orderDto.items()),
+                Instant.now()
+        );
 
         orderRepository.save(order);
+        publisher.publishOrderCreated(orderEvent);
 
         //TODO: add Transactional Outbox Pattern
-
     }
 
     private BigDecimal getTotalAmount(List<OrderItemDto> items) {
@@ -72,6 +65,15 @@ public class OrderService {
                 .map(item -> item.price().multiply(BigDecimal.valueOf(item.quantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         return total;
+    }
+
+    private static void mapAndSetItems(List<OrderItemDto> items, Order order) {
+        List<OrderItem> list = new ArrayList<>();
+        for (OrderItemDto dto : items) {
+            OrderItem item = new OrderItem(UUID.randomUUID(), order, dto.productId(), dto.quantity(), dto.price());
+            list.add(item);
+        }
+        order.setItems(list);
     }
 
     private static List<OrderItemEvent> mapItems(List<OrderItemDto> items) {
@@ -83,8 +85,6 @@ public class OrderService {
                 ))
                 .toList();
     }
-
-
 
 
 }
