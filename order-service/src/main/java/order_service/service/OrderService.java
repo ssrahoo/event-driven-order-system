@@ -7,12 +7,13 @@ import order_service.dto.OrderDto;
 import order_service.dto.OrderItemDto;
 import order_service.entity.Order;
 import order_service.entity.OrderItem;
-import order_service.entity.OutboxEvent;
+import common.entity.OutboxEvent;
 import order_service.event.OrderEvent;
 import order_service.event.OrderItemEvent;
-import order_service.publisher.OrderPublisher;
 import order_service.repository.OrderRepository;
 import order_service.repository.OutboxRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @Service
 public class OrderService {
+    private final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final OutboxRepository outboxRepository;
@@ -37,6 +39,8 @@ public class OrderService {
 
     @Transactional
     public void createOrder(OrderDto orderDto) throws JsonProcessingException {
+        logger.info("Creating order");
+
         UUID orderId = UUID.randomUUID();
         UUID eventId = UUID.randomUUID();
         BigDecimal totalAmount = getTotalAmount(orderDto.items());
@@ -74,7 +78,9 @@ public class OrderService {
         );
 
         orderRepository.save(order);
+        logger.info("Order saved id: {}", orderId);
         outboxRepository.save(outboxEvent);
+        logger.info("Outbox event saved id: {}", outboxEvent.getId());
     }
 
     private BigDecimal getTotalAmount(List<OrderItemDto> items) {

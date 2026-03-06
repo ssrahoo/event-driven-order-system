@@ -1,4 +1,4 @@
-package order_service.repository;
+package payment_service.repository;
 
 import common.entity.OutboxEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID>{
+public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
     List<OutboxEvent> findByProcessedFalse();
     List<OutboxEvent> findTop100ByProcessedFalseOrderByCreatedAtAsc();
 }
