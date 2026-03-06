@@ -18,21 +18,20 @@ public class RabbitMqConfig {
         return new TopicExchange(EXCHANGE);
     }
 
+    //TODO: move queue and binding from order-service to payment-service
     @Bean
     public Queue paymentQueue() {
         return QueueBuilder.durable(PAYMENT_SERVICE_QUEUE).build();
     }
 
     @Bean
-    public Binding paymentBinding(Queue queue, TopicExchange exchange) {
+    public Binding paymentBinding(TopicExchange exchange) {
         return BindingBuilder
-                .bind(queue)
+                .bind(paymentQueue())
                 .to(exchange)
                 .with(ROUTING_KEY);
                 //.with("order.*");
     }
-
-    //TODO: move binding and queue to payment-service
 
     @Bean
     public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {

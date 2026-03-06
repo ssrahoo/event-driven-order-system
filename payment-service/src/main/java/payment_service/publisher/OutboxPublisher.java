@@ -1,15 +1,15 @@
-package order_service.publisher;
+package payment_service.publisher;
 
-import jakarta.transaction.Transactional;
-import order_service.config.RabbitMqConfig;
 import common.entity.OutboxEvent;
-import order_service.repository.OutboxRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import payment_service.config.RabbitMqConfig;
+import payment_service.repository.OutboxRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -39,7 +39,7 @@ public class OutboxPublisher {
 
                 rabbitTemplate.convertAndSend(
                         RabbitMqConfig.EXCHANGE,
-                        RabbitMqConfig.ROUTING_KEY,
+                        event.getEventType().toLowerCase().replace('_', '.'),
                         message
                 );
 

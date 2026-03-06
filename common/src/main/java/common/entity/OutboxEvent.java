@@ -1,15 +1,12 @@
-package order_service.entity;
+package common.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "outbox_event")
+@Table(name = "outbox_events")
 public class OutboxEvent {
 
     @Id
