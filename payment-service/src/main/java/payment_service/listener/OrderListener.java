@@ -3,6 +3,8 @@ package payment_service.listener;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
+import common.event.PaymentEvent;
+import common.event.PaymentItemEvent;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,16 +71,13 @@ public class OrderListener {
             payment.setStatus(paymentSuccess ? "SUCCESS" : "FAILED");
             paymentRepository.save(payment);
 
-            // Create Outbox Event
-            Map<String, Object> payload = Map.of(
-                    "orderId", event.orderId(),
-                    "status", paymentSuccess ? "SUCCESS" : "FAILED",
-                    "processedAt", Instant.now(),
-                    "items", event.items().stream()
-                            .map(item -> Map.of(
-                                    "productId", item.productId(),
-                                    "quantity", item.quantity()
-                            ))
+            PaymentEvent paymentEvent = new PaymentEvent(
+                    event.orderId(),
+                    UUID.randomUUID(),
+                    paymentSuccess ? "SUCCESS" : "FAILED",
+                    Instant.now(),
+                    event.items().stream()
+                            .map(i -> new PaymentItemEvent(i.productId(), i.quantity()))
                             .toList()
             );
 
@@ -88,7 +87,7 @@ public class OrderListener {
                     "ORDER",
                     event.orderId().toString(),
                     paymentSuccess ? "PAYMENT_SUCCEEDED" : "PAYMENT_FAILED",
-                    objectMapper.writeValueAsString(payload),
+                    objectMapper.writeValueAsString(paymentEvent),
                     LocalDateTime.now()
             );
             outboxRepository.save(outboxEvent);
