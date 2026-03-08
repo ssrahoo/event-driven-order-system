@@ -1,0 +1,16 @@
+{
+  "customerId": "789",
+  "currency": "USD",
+  "items": [
+    {
+      "productId": "A1",
+      "quantity": 2,
+      "price": 50.00
+    },
+    {
+      "productId": "A9",
+      "quantity": 2,
+      "price": 25.00
+    }
+  ]
+}
