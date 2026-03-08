@@ -61,6 +61,7 @@ public class OrderListener {
 
             // Persist Payment + Outbox in a single transaction
             Payment payment = new Payment();
+            payment.setPaymentId(UUID.randomUUID());
             payment.setOrderId(event.orderId());
             payment.setAmount(event.totalAmount());
             payment.setCurrency(event.currency());

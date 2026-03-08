@@ -80,7 +80,7 @@ public class OrderService {
         orderRepository.save(order);
         logger.info("Order saved id: {}", orderId);
         outboxRepository.save(outboxEvent);
-        logger.info("Outbox event saved id: {}", outboxEvent.getId());
+        logger.info("Outbox event saved id: {}", outboxEvent.getOutboxEventId());
     }
 
     private BigDecimal getTotalAmount(List<OrderItemDto> items) {

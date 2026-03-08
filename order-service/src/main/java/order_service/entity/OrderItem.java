@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name="orderitems")
+@Table(name="order_items")
 public class OrderItem {
     @Id
-    @Column(name="orderitem_id")
+    @Column(name="order_item_id")
     private UUID orderItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
