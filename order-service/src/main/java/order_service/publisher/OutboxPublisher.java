@@ -28,7 +28,7 @@ public class OutboxPublisher {
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void publishEvents() {
-        List<OutboxEvent> events = outboxRepository.findTop100ByProcessedFalseOrderByCreatedAtAsc();
+        List<OutboxEvent> events = outboxRepository.findTop100ByProcessedFalseAndEventTypeStartingWithOrderByCreatedAtAsc("ORDER");
 
         for (OutboxEvent event : events) {
             try {
