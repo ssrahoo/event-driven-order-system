@@ -2,7 +2,6 @@ package order_service.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import order_service.dto.OrderDto;
-import order_service.event.OrderEvent;
 import order_service.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

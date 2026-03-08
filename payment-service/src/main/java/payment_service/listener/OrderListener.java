@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import common.entity.OutboxEvent;
 import payment_service.config.RabbitMqConfig;
 import payment_service.entity.Payment;
-import payment_service.event.OrderEvent;
+import common.event.OrderEvent;
 import payment_service.repository.OutboxRepository;
 import payment_service.repository.PaymentRepository;
 

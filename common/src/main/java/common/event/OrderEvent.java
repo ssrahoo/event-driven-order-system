@@ -1,4 +1,4 @@
-package payment_service.event;
+package common.event;
 
 import java.math.BigDecimal;
 import java.time.Instant;

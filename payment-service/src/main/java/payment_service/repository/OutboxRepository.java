@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface OutboxRepository extends JpaRepository<OutboxEvent, UUID> {
     List<OutboxEvent> findByProcessedFalse();
     List<OutboxEvent> findTop100ByProcessedFalseOrderByCreatedAtAsc();
+    List<OutboxEvent> findTop100ByProcessedFalseAndEventTypeStartingWithOrderByCreatedAtAsc(String prefix);
 }
