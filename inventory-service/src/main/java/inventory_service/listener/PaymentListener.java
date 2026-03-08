@@ -3,6 +3,7 @@ package inventory_service.listener;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Channel;
 import common.entity.OutboxEvent;
+import common.event.InventoryReservationEvent;
 import common.event.OrderEvent;
 import common.event.PaymentEvent;
 import common.event.PaymentItemEvent;
@@ -69,10 +70,10 @@ public class PaymentListener {
                 inventoryReservationRepository.save(inventoryReservation);
             }
 
-            Map<String, Object> payload = Map.of(
-                    "orderId", event.orderId(),
-                    "eventId", UUID.randomUUID(),
-                    "status", inventoryReservationSuccess ? "SUCCESS" : "FAILED"
+            InventoryReservationEvent inventoryReservationEvent = new InventoryReservationEvent(
+                    event.orderId(),
+                    UUID.randomUUID(),
+                    inventoryReservationSuccess ? "SUCCESS" : "FAILED"
             );
 
             // Transactional Outbox Pattern
@@ -80,8 +81,8 @@ public class PaymentListener {
                     UUID.randomUUID(),
                     "ORDER",
                     event.orderId().toString(),
-                    inventoryReservationSuccess ? "INVENTORY_RESERVED" : "INVENTORY_OUT_OF_STOCK",
-                    objectMapper.writeValueAsString(payload),
+                    inventoryReservationSuccess ? "INVENTORY_RESERVED" : "INVENTORY_FAILED",
+                    objectMapper.writeValueAsString(inventoryReservationEvent),
                     LocalDateTime.now()
             );
             outboxRepository.save(outboxEvent);
