@@ -17,7 +17,7 @@ public class RabbitMqConfig {
     public static final String NOTIFICATION_ROUTING_KEY = "payment.*";
 
     public static final String INVENTORY_SERVICE_QUEUE = "inventory-service.queue";
-    public static final String NOTIFICATION_SERVICE_QUEUE = "notification-service.queue";
+    public static final String NOTIFICATION_SERVICE_QUEUE = "notification-service.queue.payment";
     public static final String PAYMENT_SERVICE_QUEUE = "payment-service.queue";
 
     @Bean
