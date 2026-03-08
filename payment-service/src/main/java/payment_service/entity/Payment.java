@@ -12,7 +12,6 @@ import java.util.UUID;
 public class Payment {
 
     @Id
-    @GeneratedValue
     @Column(name = "payment_id")
     private UUID paymentId;
 

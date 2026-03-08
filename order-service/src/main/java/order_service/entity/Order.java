@@ -11,7 +11,7 @@ import java.util.UUID;
 @Table(name="orders")
 public class Order {
     @Id
-    @Column(name="order_id", columnDefinition = "BINARY(16)")
+    @Column(name="order_id")
     private UUID orderId;
 
     private String customerId;

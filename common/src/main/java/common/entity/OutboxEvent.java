@@ -10,7 +10,8 @@ import java.util.UUID;
 public class OutboxEvent {
 
     @Id
-    private UUID id;
+    @Column(name="outbox_event_id")
+    private UUID outboxEventId;
 
     private String aggregateType;
     private String aggregateId;
@@ -24,8 +25,8 @@ public class OutboxEvent {
 
     public OutboxEvent() {}
 
-    public OutboxEvent(UUID id, String aggregateType, String aggregateId, String eventType, String payload, LocalDateTime createdAt) {
-        this.id = id;
+    public OutboxEvent(UUID outboxEventId, String aggregateType, String aggregateId, String eventType, String payload, LocalDateTime createdAt) {
+        this.outboxEventId = outboxEventId;
         this.aggregateType = aggregateType;
         this.aggregateId = aggregateId;
         this.eventType = eventType;
@@ -33,12 +34,12 @@ public class OutboxEvent {
         this.createdAt = createdAt;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getOutboxEventId() {
+        return outboxEventId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setOutboxEventId(UUID outboxEventId) {
+        this.outboxEventId = outboxEventId;
     }
 
     public String getAggregateType() {
