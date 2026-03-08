@@ -72,7 +72,13 @@ public class OrderListener {
             Map<String, Object> payload = Map.of(
                     "orderId", event.orderId(),
                     "status", paymentSuccess ? "SUCCESS" : "FAILED",
-                    "processedAt", Instant.now()
+                    "processedAt", Instant.now(),
+                    "items", event.items().stream()
+                            .map(item -> Map.of(
+                                    "productId", item.productId(),
+                                    "quantity", item.quantity()
+                            ))
+                            .toList()
             );
 
             // Transactional Outbox Pattern
